@@ -8,3 +8,4 @@ for x in my_list:
 # list comprehention:
 
 new_list2 = [x * 2 for x in my_list]
+

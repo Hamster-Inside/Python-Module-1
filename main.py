@@ -1,4 +1,5 @@
 """ BlackJack game """
+import random
 
 """
 function itertools
@@ -27,12 +28,15 @@ split cards
 
 class Deck:
 
-    def __init__(self):
-        print(self.standard_deck)
+    def __init__(self, number_of_decks):
+        self.standard_deck = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'] * 4 * number_of_decks
+        random.shuffle(self.standard_deck)
+        random.shuffle(self.standard_deck)
+        random.shuffle(self.standard_deck)
+        suits = ['H', 'D', 'S', 'C']
+        # Hearts, Diamonds, Spades, Clubs (Kier, Karo, Pik, Trefl)
 
-    standard_deck = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'] * 4
-    # Hearts, Diamonds, Spades, Clubs (Kier, Karo, Pik, Trefl)
-    suits = ['H', 'D', 'S', 'C']
+
 
 
 class Player:
@@ -44,7 +48,13 @@ class Croupier:
 
 
 class Game:
-    pass
+    def __init__(self, num_of_decks):
+        self.deck = Deck(num_of_decks)
+    def draw_card(self, player):
+        card = self.standard_deck.pop(-1)
+        return card
 
-
-deck = Deck()
+deck = Deck(2)
+print(deck.standard_deck)
+print(deck.draw_card())
+print(deck.standard_deck)
