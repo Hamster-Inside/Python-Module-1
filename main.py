@@ -37,24 +37,46 @@ class Deck:
         # Hearts, Diamonds, Spades, Clubs (Kier, Karo, Pik, Trefl)
 
 
+class Person:
+    def __init__(self, name):
+        self.name = name
 
 
-class Player:
-    pass
+class Player(Person):
+    def __init__(self, player_name):
+        super().__init__(player_name)
+
+    def __repr__(self):
+        return self.name
 
 
-class Croupier:
-    pass
+class Croupier(Person):
+    def __init__(self):
+        super().__init__('Stefan')
+
+    def __repr__(self):
+        return self.name
 
 
 class Game:
     def __init__(self, num_of_decks):
         self.deck = Deck(num_of_decks)
+        self.croupier = Croupier()
+        self.players = [self.croupier]
+
     def draw_card(self, player):
         card = self.standard_deck.pop(-1)
         return card
 
-deck = Deck(2)
-print(deck.standard_deck)
-print(deck.draw_card())
-print(deck.standard_deck)
+    def add_player(self, player_nickname):
+        player = Player(player_nickname)
+        self.players.append(player)
+
+    def get_player_list(self):
+        return self.players
+
+
+game = Game(3)
+game.add_player('Boguś')
+game.add_player('Homar')
+print(game.get_player_list())
