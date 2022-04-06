@@ -51,6 +51,7 @@ class Card:
     def __init__(self):
         self.card_list = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'] * 4
         self.card_suits = ['H', 'D', 'S', 'C']
+        # Hearts, Diamonds, Spades, Clubs (Kier, Karo, Pik, Trefl)
 
     def card_value(self, card):
         if card == 'J' or card == 'Q' or card == 'K':
@@ -71,7 +72,15 @@ class Deck:
         random.shuffle(self.standard_deck)
         random.shuffle(self.standard_deck)
         self.deck_cards = {}
-        # Hearts, Diamonds, Spades, Clubs (Kier, Karo, Pik, Trefl)
+
+    def view_table_cards(self):
+        for player_p in self.deck_cards:
+            if player_p.name != 'Croupier':
+                print(
+                    f"{player_p} : {self.deck_cards[player_p]}"
+                    f" {'LOST' if player_p.status == PlayerStatus.LOST else ''}")
+            else:
+                print(f"{player_p} : [{self.deck_cards[player_p][0]}]")
 
 
 class Person:
@@ -120,8 +129,7 @@ class Game:
                 game.draw_card(player_in_game)
 
     def view_deck(self):
-        for player in self.player_list:
-            print(f"{player} : {self.deck.deck_cards[player]} {'LOST' if player.status == PlayerStatus.LOST else ''}")
+        self.deck.view_table_cards()
 
     def split_cards(self, player_to_have_split_cards):
         pass
@@ -136,11 +144,14 @@ class Game:
 
 
 game = Game(num_of_decks=3)
+game.add_player('Croupier')
 game.add_player('Boguś')
 game.add_player('Homar')
 game.start_deck_game()  # give 2 cards to every player, where croupier has one hidden
 
 for player in game.player_list:
+    if player.name == 'Croupier':
+        continue
     while True:
         game.view_deck()
         operation = input(f"{player} - What do you want to do? (draw, pass, split)\n")
@@ -159,4 +170,3 @@ for player in game.player_list:
             case _:
                 print('Need to Draw, Pass or Split')
 game.view_deck()
-
