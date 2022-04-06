@@ -46,6 +46,11 @@ class PlayerStatus(Enum):
     DRAW = 3
 
 
+class GameStatus(Enum):
+    IN_PROGRESS = 0
+    FINISHED = 1
+
+
 class Card:
 
     def __init__(self):
@@ -75,7 +80,7 @@ class Deck:
 
     def view_table_cards(self):
         for player_p in self.deck_cards:
-            if player_p.name != 'Croupier':
+            if player_p.name != 'Croupier' or game.game_status == GameStatus.FINISHED:
                 print(
                     f"{player_p} : {self.deck_cards[player_p]}"
                     f" {'LOST' if player_p.status == PlayerStatus.LOST else ''}")
@@ -113,10 +118,12 @@ class Game:
     def __init__(self, num_of_decks):
         self.deck = Deck(num_of_decks)
         self.player_list = []
+        self.game_status = GameStatus.IN_PROGRESS
 
     def draw_card(self, player_to_draw_to):
         card = self.deck.standard_deck.pop(-1)
         self.deck.deck_cards[player_to_draw_to].append(card)
+        self.count_player_cards_value(player_to_draw_to)
 
     def add_player(self, player_nickname):
         new_player = Player(player_nickname)
@@ -142,6 +149,12 @@ class Game:
             player.status = PlayerStatus.LOST
             raise GameLostException(f'Player {player} LOST, value over 21')
 
+    def croupier_play(self):
+        croupier = self.player_list[0]
+        while croupier.count < 17:
+            self.draw_card(croupier)
+            self.view_deck()
+
 
 game = Game(num_of_decks=3)
 game.add_player('Croupier')
@@ -159,7 +172,6 @@ for player in game.player_list:
             case 'draw':
                 try:
                     game.draw_card(player)
-                    game.count_player_cards_value(player)
                 except GameLostException as e:
                     print(e)
                     break
@@ -169,4 +181,8 @@ for player in game.player_list:
                 game.split_cards(player)
             case _:
                 print('Need to Draw, Pass or Split')
+game.game_status = GameStatus.FINISHED
 game.view_deck()
+
+game.croupier_play()
+
