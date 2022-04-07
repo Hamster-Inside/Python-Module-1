@@ -2,30 +2,6 @@
 import random
 from enum import Enum
 
-"""
-function itertools
-valrus:=operator
-Cards: 2,3,4,5,6,7,8,9,10,J,Q,K,A (kier karo trefl pik)
-shuffle -> pop
-Classes:
-Game
-Deck
-Card
-Player: Human Croupier
-
-Exceptions:
-GameOverException
-GameOverPlayerException - player lost
-GameOverCroupierException - player win
-
-Additional:
-Counting cards
-graphic interface - tkinter
-auto play game till you win with coins
-split cards
-
-"""
-
 
 class GameLostException(Exception):
     pass
@@ -70,7 +46,6 @@ class Card:
 class Deck:
 
     def __init__(self, number_of_decks):
-        self.croupier = Croupier()
         self.cards = Card()
         self.standard_deck = self.cards.card_list * number_of_decks
         random.shuffle(self.standard_deck)
@@ -101,15 +76,6 @@ class Player(Person):
         self.player_cards = []
         self.count = 0
         self.status = PlayerStatus.PLAYING
-
-    def __repr__(self):
-        return self.name
-
-
-class Croupier(Person):
-    def __init__(self):
-        super().__init__('Stefan')
-        self.croupier_cards = []
 
     def __repr__(self):
         return self.name
