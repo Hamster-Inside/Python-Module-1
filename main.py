@@ -83,7 +83,9 @@ class Deck:
             if player_p.name != 'Croupier' or game.game_status == GameStatus.FINISHED:
                 print(
                     f"{player_p} : {self.deck_cards[player_p]}"
-                    f" {'LOST' if player_p.status == PlayerStatus.LOST else ''}")
+                    f" {'LOST' if player_p.status == PlayerStatus.LOST else ''}"
+                    f" {'WIN' if player_p.status == PlayerStatus.WIN else ''}"
+                    f" {'DRAW' if player_p.status == PlayerStatus.DRAW else ''}")
             else:
                 print(f"{player_p} : [{self.deck_cards[player_p][0]}]")
 
@@ -119,6 +121,7 @@ class Game:
         self.deck = Deck(num_of_decks)
         self.player_list = []
         self.game_status = GameStatus.IN_PROGRESS
+        self.players_in_game = 0
 
     def draw_card(self, player_to_draw_to):
         card = self.deck.standard_deck.pop(-1)
@@ -127,6 +130,7 @@ class Game:
 
     def add_player(self, player_nickname):
         new_player = Player(player_nickname)
+        self.players_in_game += 1
         self.player_list.append(new_player)
         self.deck.deck_cards[new_player] = []
 
@@ -144,22 +148,40 @@ class Game:
     def count_player_cards_value(self, player_to_count_values_from):
         player_to_count_values_from.count = 0
         for card_val in self.deck.deck_cards[player_to_count_values_from]:
-            player.count += self.deck.cards.card_value(card_val)
-        if player.count > 21:
-            player.status = PlayerStatus.LOST
-            raise GameLostException(f'Player {player} LOST, value over 21')
+            player_to_count_values_from.count += self.deck.cards.card_value(card_val)
+        if player_to_count_values_from.count > 21:
+            player_to_count_values_from.status = PlayerStatus.LOST
+            self.players_in_game -= 1
+            raise GameLostException(f'Player {player_to_count_values_from} LOST, value over 21')
 
     def croupier_play(self):
         croupier = self.player_list[0]
         while croupier.count < 17:
             self.draw_card(croupier)
+            print()
             self.view_deck()
+
+    def win_lost_resolver(self):
+        croupier = self.player_list[0]
+        for players_comp in self.player_list:
+            if players_comp != croupier and players_comp.status != PlayerStatus.LOST:
+                if croupier.status != PlayerStatus.LOST:
+                    if players_comp.count > croupier.count:
+                        players_comp.status = PlayerStatus.WIN
+                    elif players_comp.count == croupier.count:
+                        players_comp.status = PlayerStatus.DRAW
+                    else:
+                        players_comp.status = PlayerStatus.LOST
+                else:
+                    players_comp.status = PlayerStatus.WIN
 
 
 game = Game(num_of_decks=3)
 game.add_player('Croupier')
 game.add_player('Boguś')
 game.add_player('Homar')
+game.add_player('Stefan')
+game.add_player('Hamtaro')
 game.start_deck_game()  # give 2 cards to every player, where croupier has one hidden
 
 for player in game.player_list:
@@ -183,6 +205,10 @@ for player in game.player_list:
                 print('Need to Draw, Pass or Split')
 game.game_status = GameStatus.FINISHED
 game.view_deck()
-
-game.croupier_play()
-
+if game.players_in_game > 1:
+    try:
+        game.croupier_play()
+    except GameLostException as e:
+        print(e)
+    game.win_lost_resolver()
+game.view_deck()
