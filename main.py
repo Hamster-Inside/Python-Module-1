@@ -142,7 +142,8 @@ class Game:
                     players_comp.status = PlayerStatus.WIN
 
 
-game = Game(num_of_decks=3)
+decks = int(input("Enter number of decks in game\n"))
+game = Game(decks)
 game.add_player('Croupier')
 game.add_player('Boguś')
 game.add_player('Homar')
