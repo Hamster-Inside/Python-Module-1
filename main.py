@@ -1,18 +1,7 @@
 """ BlackJack game """
-import random
+
 from enum import Enum
-
-
-class GameLostException(Exception):
-    pass
-
-
-class WinGameException(Exception):
-    pass
-
-
-class DrawException(Exception):
-    pass
+import card, deck
 
 
 class PlayerStatus(Enum):
@@ -25,44 +14,6 @@ class PlayerStatus(Enum):
 class GameStatus(Enum):
     IN_PROGRESS = 0
     FINISHED = 1
-
-
-class Card:
-
-    def __init__(self):
-        self.card_list = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'] * 4
-        self.card_suits = ['H', 'D', 'S', 'C']
-        # Hearts, Diamonds, Spades, Clubs (Kier, Karo, Pik, Trefl)
-
-    def card_value(self, card):
-        if card == 'J' or card == 'Q' or card == 'K':
-            return 10
-        elif card == 'A':
-            return 11
-        else:
-            return int(card)
-
-
-class Deck:
-
-    def __init__(self, number_of_decks):
-        self.cards = Card()
-        self.standard_deck = self.cards.card_list * number_of_decks
-        random.shuffle(self.standard_deck)
-        random.shuffle(self.standard_deck)
-        random.shuffle(self.standard_deck)
-        self.deck_cards = {}
-
-    def view_table_cards(self):
-        for player_p in self.deck_cards:
-            if player_p.name != 'Croupier' or game.game_status == GameStatus.FINISHED:
-                print(
-                    f"{player_p} : {self.deck_cards[player_p]}"
-                    f" {'LOST' if player_p.status == PlayerStatus.LOST else ''}"
-                    f" {'WIN' if player_p.status == PlayerStatus.WIN else ''}"
-                    f" {'DRAW' if player_p.status == PlayerStatus.DRAW else ''}")
-            else:
-                print(f"{player_p} : [{self.deck_cards[player_p][0]}]")
 
 
 class Person:
