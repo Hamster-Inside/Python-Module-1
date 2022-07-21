@@ -3,7 +3,6 @@ from card import Card
 
 class Player:
     def __init__(self):
-        pass
         self.cards_in_hand = []
 
     def get_card(self, card: Card):

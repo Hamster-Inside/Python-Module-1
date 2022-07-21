@@ -1,4 +1,6 @@
 from deck import Deck
+from player import Player
+
 
 class Game:
     def __init__(self):
@@ -6,4 +8,11 @@ class Game:
         self.deck.shuffle_cards()
 
     def play(self):
-        pass
+        user = Player()
+
+        for _ in range (2):
+            card = self.deck.hit()
+            user.get_card(card)
+
+        print(user.cards_in_hand)
+        print(user.calculate_points())
