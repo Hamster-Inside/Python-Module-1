@@ -18,5 +18,3 @@ class Deck:
         return self.cards.pop()
 
 
-deck = Deck(1)
-print(deck.cards)

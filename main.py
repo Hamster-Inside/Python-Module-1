@@ -35,7 +35,7 @@ class Player(Person):
 class Game:
 
     def __init__(self, num_of_decks):
-        self.deck = Deck(num_of_decks)
+        self.deck = deck.Deck(num_of_decks)
         self.player_list = []
         self.game_status = GameStatus.IN_PROGRESS
         self.players_in_game = 0
