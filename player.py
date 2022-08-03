@@ -1,4 +1,5 @@
 from card import Card
+from exceptions import GameOverException
 
 
 class Player:
@@ -23,5 +24,6 @@ class Player:
                     points += 11
             else:
                 points += card.value
+        if points > 21:
+            raise GameOverException('Number of points exceeded')
         return points
-
