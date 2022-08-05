@@ -27,6 +27,7 @@ class Game:
             self._print_menu()
             choice = input("Wybierz 0 lub 1\n")
             if choice == "0":
+                print("PLAYER CARDS: ", user.cards_in_hand)
                 print("PLAYER POINTS: ", user.calculate_points())
                 break
             elif choice == "1":
@@ -37,21 +38,23 @@ class Game:
         return user.calculate_points()
 
     def _croupier_plays(self, user_points):
-        croupier = Player()
-        while user_points > croupier.calculate_points() and croupier.calculate_points() < 17:
-            croupier.get_card(self.deck.hit())
-        return croupier.calculate_points()
-
-
+        self.croupier = Player()
+        while user_points > self.croupier.calculate_points() and self.croupier.calculate_points() < 17:
+            self.croupier.get_card(self.deck.hit())
+        return self.croupier.calculate_points()
 
     def play(self):
         try:
             user_points = self.user_plays()
         except GameOverException as error:
             raise GameOverUserException from error
-        self._croupier_plays(user_points)
-
         try:
             croupier_points = self._croupier_plays(user_points)
         except GameOverException as error:
             raise GameOverCroupierException from error
+        print("CROUPIER CARDS: ", self.croupier.cards_in_hand)
+        print("CROUPIER POINTS: ", self.croupier.calculate_points())
+        if user_points == croupier_points:
+            print('Remis')
+        else:
+            print('Wygrana krupiera')
